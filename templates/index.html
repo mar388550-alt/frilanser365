@@ -14,45 +14,31 @@
 </head>
 <body>
     <h1>WebSocket Chat с нумерацией</h1>
-
     <form id="form">
         <input type="text" id="input" placeholder="Введите сообщение" autocomplete="off">
         <button type="submit">Отправить</button>
     </form>
-
-    <ul id="messages">
-        <!-- Сюда будут добавляться сообщения -->
-    </ul>
-
+    <ul id="messages"></ul>
     <script>
         const ws = new WebSocket(`ws://${window.location.host}/ws`);
-
         ws.onmessage = function(event) {
             const data = JSON.parse(event.data);
-            const number = data.number;
-            const message = data.message;
             const li = document.createElement('li');
-            li.textContent = `${number}: ${message}`;
+            li.textContent = `${data.number}: ${data.message}`;
             document.getElementById('messages').appendChild(li);
         };
-
-        ws.onclose = function() {
-            console.log('Соединение закрыто');
-        };
-
         ws.onerror = function(error) {
-            console.error('Ошибка WebSocket:', error);
+            alert('Ошибка WebSocket: ' + error);
         };
-
-        document.getElementById('form').addEventListener('submit', function(event) {
-            event.preventDefault();
+        document.getElementById('form').onsubmit = function(e) {
+            e.preventDefault();
             const input = document.getElementById('input');
             const text = input.value.trim();
-            if (text === '') return;
-            const payload = JSON.stringify({ message: text });
-            ws.send(payload);
-            input.value = '';
-        });
+            if (text) {
+                ws.send(JSON.stringify({message: text}));
+                input.value = '';
+            }
+        };
     </script>
 </body>
 </html>
