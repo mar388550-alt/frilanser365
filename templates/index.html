@@ -13,7 +13,7 @@
     </style>
 </head>
 <body>
-    <h1>WebSocket Chat</h1>
+    <h1>WebSocket Chat с нумерацией</h1>
     <form id="form">
         <input type="text" id="input" placeholder="Введите сообщение" autocomplete="off">
         <button type="submit">Отправить</button>
@@ -21,7 +21,8 @@
     <ul id="messages"></ul>
 
     <script>
-        const ws = new WebSocket(`ws://${window.location.host}/ws`);
+        // Используем wss:// для защищённого соединения (ваш сайт работает по HTTPS)
+        const ws = new WebSocket(`wss://${window.location.host}/ws`);
 
         ws.onopen = () => console.log('WebSocket connected');
         ws.onerror = (err) => alert('WebSocket error: ' + err);
